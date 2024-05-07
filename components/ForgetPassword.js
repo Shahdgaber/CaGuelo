@@ -1,27 +1,33 @@
 import { useState } from 'react';
-import { View , TextInput , Button , Text , Pressable } from 'react-native';
+import { View , TextInput , Button , Text , Pressable , Alert } from 'react-native';
 import { router } from 'expo-router';
-// import { reset } from '../firebase/auth';
+import { sendPasswordResetEmail } from "firebase/auth";
+
 
 const ForgetPassword = () => {
 
 	const [email , setEmail] = useState('');
 	const [error , setError] = useState('');
 
-	const handleReset = async () => {
-		try {
-            await reset(email);
-            console.log('Password Rested Successfully');
-            alert('Email for reset password sent successfully');
-		} catch (error) {
-			console.log(`Error ${JSON.stringify(error)}`);
-			setError(error);
-		}
-	};
+	const handleReset =() =>{
+    sendPasswordResetEmail(email)
+.then(() => {
+   Alert.alert('password reset email sent');
+})
+.catch(error => {
+   Alert.alert('Error',error.message);
+  });
+};
 
 	return (
-		<View style = {{ flex: 1 , flexDirection: 'column' , justifyContent: 'center' , margin: '15' }}>
-			<TextInput placeholder = 'Email' value = {email} onChangeText = {setEmail} style = {{ borderWidth: 1 , padding: 10 , marginBottom: 10 }} />
+		<View style = {{ flex: 1 , flexDirection: 'column' , justifyContent: 'center' , margin: '15' , backgroundColor: "#d9ead3"}}>
+			<TextInput placeholder = 'Email' value = {email} onChangeText = {setEmail} style = {{ borderColor: '#ccc',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        marginBottom: 20,
+        width: '100%',
+        borderRadius: 8,
+        backgroundColor: '#FFF', }} />
 			<Button title = 'RESET' onPress = {handleReset} />
 			<Pressable onPress = {() => router.replace('/account/register')}>
 				<Text style = {{ marginTop: 10 }}> register </Text>

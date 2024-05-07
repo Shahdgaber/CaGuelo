@@ -1,13 +1,11 @@
-
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import CartScreen from '../categories/CartScreen';
+import ChildProductList from "../ProductList/ChildProductList"
 
-
-const cart = () => {
+const ForChildrens = () => {
   return (
     <View style={styles.container}>
-      <CartScreen />
+      <ChildProductList />
     </View>
   );
 };
@@ -16,8 +14,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'left',
+    flexWrap: "wrap",
   },
 });
 
-export default cart;
+export default ForChildrens;
