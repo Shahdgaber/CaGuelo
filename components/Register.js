@@ -1,49 +1,60 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text, Pressable, StyleSheet } from "react-native";
-import { router } from "expo-router";
-// import { register } from "../firebase/auth";
+import { Firebase_Auth } from "../firebase ";
 
 const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [registrationSuccess, setRegistrationSuccess] = useState(false);
+    const auth = Firebase_Auth;
 
     const handlePress = async () => {
         try {
-            const credentials = await register(email, password);
-            console.log(`credentials ${credentials}`);
-            router.navigate('/account/login');
+            // Create user with email and password using Firebase authentication
+            await auth.createUserWithEmailAndPassword(email, password);
+            // Set registration success to true
+            setRegistrationSuccess(true);
+            // Clear email and password fields
+            setEmail('');
+            setPassword('');
         } catch (error) {
-            console.log(`Error ${JSON.stringify(error)}`);
-            setError(error);
+            // Handle registration errors
+            setError(error.message);
         }
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Register</Text>
-            <TextInput
-                placeholder='Email'
-                value={email}
-                onChangeText={setEmail}
-                style={styles.input}
-            />
-            <TextInput
-                placeholder='Password'
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                style={styles.input}
-            />
-            <Button
-                title='Register'
-                onPress={handlePress}
-                color="#1BB7DB"
-            />
-            <Pressable onPress={() => router.navigate('/account/login')}>
-                <Text style={styles.link}>Already have an account? Login</Text>
-            </Pressable>
-            {error ? <Text style={styles.error}>{error.code}</Text> : null}
+            {registrationSuccess ? (
+                <Text style={styles.successMessage}>Registration successful! You can now login.</Text>
+            ) : (
+                <>
+                    <TextInput
+                        placeholder='Email'
+                        value={email}
+                        onChangeText={setEmail}
+                        style={styles.input}
+                    />
+                    <TextInput
+                        placeholder='Password'
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        style={styles.input}
+                    />
+                    <Button
+                        title='Register'
+                        onPress={handlePress}
+                        color="#1BB7DB"
+                    />
+                    <Pressable onPress={() => setRegistrationSuccess(true)}>
+                        <Text style={styles.link}>Already have an account? Login</Text>
+                    </Pressable>
+                    {error ? <Text style={styles.error}>{error}</Text> : null}
+                </>
+            )}
         </View>
     );
 };
@@ -80,6 +91,11 @@ const styles = StyleSheet.create({
     error: {
         color: 'red',
         marginTop: 10,
+    },
+    successMessage: {
+        fontSize: 18,
+        color: 'green',
+        marginBottom: 20,
     },
 });
 

@@ -1,15 +1,23 @@
-import React from 'react'
-import { View , Text } from 'react-native-web';
 
-export default function cart() {
-    return (
-
-        <View>
-            <Text> From cart page </Text>
-            {/* Call the 'cart' component here to render all products in this route */}
-        </View>
-
-    );
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import CartScreen from '../categories/CartScreen';
 
 
+const cart = () => {
+  return (
+    <View style={styles.container}>
+      <CartScreen />
+    </View>
+  );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default cart;

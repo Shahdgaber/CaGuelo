@@ -72,11 +72,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   searchButton: {
-    marginLeft: 120, // Adjust spacing between search input and button
+    marginLeft: 10,
+    marginRight:100, // Adjust spacing between search input and button
     paddingVertical: 8,
     paddingHorizontal: 12,
-    backgroundColor: "#007bff", // Example color for the button
+    backgroundColor: "#1BB7DB", // Example color for the button
     borderRadius: 5,
+    
   },
   searchButtonText: {
     fontSize: 16,
