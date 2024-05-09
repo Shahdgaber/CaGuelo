@@ -128,11 +128,11 @@ const CustomDrawerContent = (props) => {
         label={"Settings"}
         labelStyle={[
           styles.navItemLabel,
-          { color: pathname == "/settings" ? "#fff" : "#000" },
+          { color: pathname == "/profile" ? "#fff" : "#000" },
         ]}
-        style={{ backgroundColor: pathname == "/settings" ? "#0a4a7c" : "#fff" }}
+        style={{ backgroundColor: pathname == "/profile" ? "#0a4a7c" : "#fff" }}
         onPress={() => {
-          router.push("/settings");
+          router.push("/profile");
         }}
       />
     </DrawerContentScrollView>

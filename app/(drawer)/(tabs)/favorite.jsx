@@ -95,7 +95,7 @@ function FavoriteItem({ productId, onRemove }) {
   return (
     <View style={styles.favoriteItem}>
       <Text style={styles.productName}>{product.name}</Text>
-      <Text style={styles.price}>Price: ${product.price}</Text>
+      <Text style={styles.price}>Price: {product.price}</Text>
       <Image source={{ uri: product.imageUrl }} style={styles.image} />
       <TouchableOpacity onPress={onRemove} style={styles.removeButton}>
         <Text style={styles.removeButtonText}>Remove</Text>
