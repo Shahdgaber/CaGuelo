@@ -31,7 +31,7 @@ const Register = () => {
         userId: userId,
       };
       await addDoc(collection(db, 'users'), userData);
-      router.navigate('index');
+      router.navigate('/');
     } catch (error) {
       console.error('Error signing up:', error.message);
       setError(error.message); // Store the error message

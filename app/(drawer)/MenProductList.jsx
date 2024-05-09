@@ -79,10 +79,9 @@ const ProductList = ({ goToCart }) => {
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth : '100%',
+    Width : '100%',
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
     paddingBottom : 20 ,
     backgroundColor: '#d9ead3'
   },
@@ -94,14 +93,14 @@ const styles = StyleSheet.create({
   productItem: {
     flex: 1,
     alignItems: 'center',
-    margin: 10,
-    padding: 10,
+    marginBottom : 10,
+    // padding: 10,
     borderRadius: 10,
-    elevation: 3,
+    // elevation: 3,
   },
   productImage: {
-    width: 210,
-    height: 260,
+    width: '80%',
+    height: 160,
     borderRadius: 10,
   },
   productInfo: {
@@ -142,6 +141,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     paddingBottom: 20,
   },
+
 });
 
 export default ProductList;

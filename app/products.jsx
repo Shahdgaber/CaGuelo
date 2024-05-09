@@ -6,6 +6,44 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height; 
  
 const ProductPage = () => { 
+
+  useEffect(() => {
+    const latest = products.filter((item) => item.category === 'latest');
+    const popular = products.filter((item) => item.category === 'popular');
+    const laptops = products.filter((item) => item.category === 'laptop');
+    const phones = products.filter((item) => item.category === 'phone');
+    const accessories = products.filter((item) => item.category === 'accessories');
+
+    setFilteredPopular(
+      popular.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+
+    setFilteredLatest(
+      latest.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+
+    setFilteredLaptops(
+      laptops.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+
+    setFilteredPhones(
+      phones.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setFilteredAccessories(
+      accessories.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [products, searchTerm]);
+  
   return ( 
     <ScrollView contentContainerStyle={styles.container}> 
       {/* <ImageBackground 

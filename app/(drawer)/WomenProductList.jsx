@@ -8,7 +8,6 @@ const ProductList = ({ goToCart }) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      
       try {
         const q = query(collection(db, "products"), where("category", "==", "women"));
         const querySnapshot = await getDocs(q);
@@ -16,13 +15,11 @@ const ProductList = ({ goToCart }) => {
         querySnapshot.forEach((doc) => {
           productsData.push({ id: doc.id, ...doc.data(), quantity: 0 });
         });
-        
         setProducts(productsData);
       } catch (error) {
         console.error('Error fetching products: ', error);
       }
     };
-    
 
     fetchProducts();
   }, []);
@@ -65,7 +62,7 @@ const ProductList = ({ goToCart }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>For Women</Text>
+      <Text style={styles.title}>For women</Text>
       <FlatList
         data={products}
         renderItem={renderProductItem}
@@ -74,7 +71,7 @@ const ProductList = ({ goToCart }) => {
         contentContainerStyle={styles.flatListContainer}
       />
       <TouchableOpacity style={styles.button} onPress={goToCart}>
-        <Text style={styles.buttonText} >Go to Cart</Text>
+        <Text style={styles.buttonText}>Go to Cart</Text>
       </TouchableOpacity>
     </View>
   );
@@ -82,10 +79,9 @@ const ProductList = ({ goToCart }) => {
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth : '100%',
+    Width : '100%',
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
     paddingBottom : 20 ,
     backgroundColor: '#d9ead3'
   },
@@ -97,14 +93,14 @@ const styles = StyleSheet.create({
   productItem: {
     flex: 1,
     alignItems: 'center',
-    margin: 10,
-    padding: 10,
+    marginBottom : 10,
+    // padding: 10,
     borderRadius: 10,
-    elevation: 3,
+    // elevation: 3,
   },
   productImage: {
-    width: 210,
-    height: 260,
+    width: '80%',
+    height: 160,
     borderRadius: 10,
   },
   productInfo: {

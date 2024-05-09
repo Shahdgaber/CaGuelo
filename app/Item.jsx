@@ -1,87 +1,142 @@
-import React , {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image, Pressable  , TouchableOpacity , FlatList} from 'react-native';
-import { router } from "expo-router";
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import React , {useState , useEffect }from 'react';
+import { StyleSheet, Text, View, Image, Pressable , TouchableOpacity} from 'react-native';
+import { useRouter } from "expo-router";
+import { Ionicons } from '@expo/vector-icons';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { addDoc, getDocs,where , query,collection, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 
-const  Item = ({ goToCart }) =>  {
+export default function Item({ name, price, image , quantity ,  productId }) {
+  const router = useRouter();
+  const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [favorites, setFavorites] = useState({}); 
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const q = query(collection(db, "products"));
-        const querySnapshot = await getDocs(q);
-        const productsData = [];
-        querySnapshot.forEach((doc) => {
-          productsData.push({ id: doc.id, ...doc.data(), quantity: 0 });
-        });
-        setProducts(productsData);
-      } catch (error) {
-        console.error('Error fetching products: ', error);
+    const unsubscribeAuth = onAuthStateChanged(getAuth(), (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
       }
-    };
+    });
 
-    fetchProducts();
+    return () => unsubscribeAuth();
   }, []);
 
-  const addToCart = (productId) => {
-    const updatedProducts = products.map((product) =>
-      product.id === productId ? { ...product, quantity: product.quantity + 1 } : product
-    );
-    setProducts(updatedProducts);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
+      const fetchedData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setData(fetchedData);
+      setFilteredData(fetchedData);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
+      const fetchedProducts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProducts(fetchedProducts);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      const favoriteQuery = collection(db, 'Favorites');
+      const unsubscribe = onSnapshot(favoriteQuery, (snapshot) => {
+        const favoritesData = snapshot.docs.reduce((acc, doc) => {
+          const data = doc.data();
+          if (data.userId === userId) {
+            acc[data.productId] = true; 
+          }
+          return acc;
+        }, {});
+        setFavorites(favoritesData);
+      });
+
+      return () => unsubscribe();
+    }
+  }, [userId]);
+  
+  const toggleFavorite = async (productId) => {
+    if (!userId) {
+      alert('Please sign in to manage your favorites');
+      return;
+    }
+
+    if (favorites[productId]) {
+      const favoriteSnapshot = await getDocs(collection(db, 'Favorites'));
+      const favoriteDoc = favoriteSnapshot.docs.find(
+        (doc) => doc.data().productId === productId && doc.data().userId === userId
+      );
+      if (favoriteDoc) {
+        await deleteDoc(favoriteDoc.ref);
+        setFavorites((prev) => ({ ...prev, [productId]: false }));
+      }
+    } else {
+      await addDoc(collection(db, 'Favorites'), {
+        userId,
+        productId,
+      });
+      setFavorites((prev) => ({ ...prev, [productId]: true }));
+    }
   };
 
-  const removeFromCart = (productId) => {
-    const updatedProducts = products.map((product) =>
-      product.id === productId ? { ...product, quantity: Math.max(0, product.quantity - 1) } : product
-    );
-    setProducts(updatedProducts);
-  };
 
-  const renderProductItem = ({ item }) => (
-    <View style={styles.productItem}>
-      <Image source={{ uri: item.image }} style={styles.productImage} />
-      <View style={styles.productInfo}>
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text>{item.price}</Text>
-      </View>
-      <View style={styles.quantityContainer}>
-        <TouchableOpacity style={styles.quantityButton} onPress={() => removeFromCart(item.id)}>
-          <Text>-</Text>
-        </TouchableOpacity>
-        <Text>{item.quantity}</Text>
-        <TouchableOpacity style={styles.quantityButton} onPress={() => addToCart(item.id)}>
-          <Text>+</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity style={styles.addToCartButton} onPress={() => addToCart(item.id)}>
-        <Text>Add to Cart</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>For Men</Text>
-      <FlatList
-        data={products}
-        renderItem={renderProductItem}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        contentContainerStyle={styles.flatListContainer}
-      />
-      <TouchableOpacity style={styles.button} onPress={goToCart}>
-        <Text style={styles.buttonText}>Go to Cart</Text>
-      </TouchableOpacity>
+    <View style={styles.productItem}>
+    <Image source={{ uri : image }} style={styles.productImage} />
+    <View style={styles.productInfo}>
+      <Text style={styles.productName}>{name}</Text>
+      <Text>{price}</Text>
     </View>
-  );
+    <View style={styles.quantityContainer}>
+      <TouchableOpacity style={styles.quantityButton} onPress={() => removeFromCart(productId)}>
+        <Text>-</Text>
+      </TouchableOpacity>
+      <Text>{quantity}</Text>
+      <TouchableOpacity style={styles.quantityButton} onPress={() => addToCart(productId)}>
+        <Text>+</Text>
+      </TouchableOpacity>
+      <View style={styles.itemActions}>
+        <Pressable onPress={() => toggleFavorite(productId)}>
+          <Ionicons
+            name="heart-circle-outline"
+            size={30}
+            color={favorites[productId] ? "#0a4a7c" : 'lightgray'}
+          />
+        </Pressable>
+      </View>
+    </View>
+  </View>
 
-};
+  //   <View style={styles.item}>
+  //     <Pressable onPress={() => router.push(`/pressedItem?productId=${productId}`)}>
+  //       <Image source={{ uri: image }} style={styles.image} />
+  //     </Pressable>
+  //     <View style={styles.infoContainer}>
+  //       <Text style={styles.name}>{name}</Text>
+  //       <Text style={styles.price}>{price}</Text>
+  //     </View>
+  // </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth : '100%',
+    Width : '100%',
     flex: 1,
     justifyContent: 'center',
     padding: 20,
@@ -96,14 +151,14 @@ const styles = StyleSheet.create({
   productItem: {
     flex: 1,
     alignItems: 'center',
-    margin: 10,
-    padding: 10,
+    // margin: 10,
+    // padding: 10,
     borderRadius: 10,
-    elevation: 3,
+    // elevation: 3,
   },
   productImage: {
-    width: 210,
-    height: 260,
+    width: '80%',
+    height: 160,
     borderRadius: 10,
   },
   productInfo: {
@@ -145,5 +200,3 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 });
-
-export default Item;
