@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   productImage: {
-    width: 210,
-    height: 260,
+    width: '80%',
+    height: 160,
     borderRadius: 10,
   },
   productInfo: {

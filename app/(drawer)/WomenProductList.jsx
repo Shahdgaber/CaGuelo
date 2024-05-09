@@ -49,23 +49,19 @@ const ProductList = ({ goToCart }) => {
         <Text>{item.price}</Text>
       </View>
       <View style={styles.quantityContainer}>
-        <TouchableOpacity style={styles.quantityButton} onPress={() => removeFromCart(item.id)}>
+        <TouchableOpacity style={styles.quantityButton} onPress={() => removeFromCart(item.productId)}>
           <Text>-</Text>
         </TouchableOpacity>
         <Text>{item.quantity}</Text>
-        <TouchableOpacity style={styles.quantityButton} onPress={() => addToCart(item.id)}>
+        <TouchableOpacity style={styles.quantityButton} onPress={() => addToCart(item.productId)}>
           <Text>+</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.addToCartButton} onPress={() => addToCart(item.id)}>
-        <Text>Add to Cart</Text>
-      </TouchableOpacity>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>For Women</Text>
       <FlatList
         data={products}
         renderItem={renderProductItem}
@@ -82,10 +78,10 @@ const ProductList = ({ goToCart }) => {
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth : '100%',
+    Width : '100%',
     flex: 1,
-    justifyContent: 'center',
-    padding: 20,
+    // justifyContent: 'center',
+    // padding: 20,
     paddingBottom : 20 ,
     backgroundColor: '#d9ead3'
   },
@@ -97,13 +93,13 @@ const styles = StyleSheet.create({
   productItem: {
     flex: 1,
     alignItems: 'center',
-    margin: 10,
+    // margin: 10,
     padding: 10,
-    borderRadius: 10,
-    elevation: 3,
+    borderRadius: 15,
+    // elevation: 3,
   },
   productImage: {
-    width: 210,
+    width: '90%',
     height: 260,
     borderRadius: 10,
   },

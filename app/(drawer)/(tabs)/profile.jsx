@@ -8,30 +8,7 @@ const windowWidth = Dimensions.get('window').width;
 const ProfilePage = () => { 
   return ( 
     <ScrollView contentContainerStyle={styles.container}> 
-      <View style={styles.header}> 
-        <View style={styles.profileForm}> 
-          <Text style={styles.sectionTitle}>Profile Information</Text> 
-          <View style={styles.inputContainer}> 
-            <Text style={styles.label}>Email:</Text> 
-            <TextInput 
-              style={styles.input} 
-              placeholder="Enter your email" 
-              // Add any additional props or event handlers for email input 
-            /> 
-          </View> 
-          <View style={styles.inputContainer}> 
-            <Text style={styles.label}>Address:</Text> 
-            <TextInput 
-              style={styles.input} 
-              placeholder="Enter your address" 
-              // Add any additional props or event handlers for address input 
-            /> 
-          </View> 
-          <TouchableOpacity style={styles.saveButton}> 
-            <Text style={styles.saveButtonText}>Save</Text> 
-          </TouchableOpacity> 
-        </View> 
-      </View> 
+
     </ScrollView> 
   ); 
 }; 
