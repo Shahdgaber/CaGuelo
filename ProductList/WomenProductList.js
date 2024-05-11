@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, useWindowDimensions } from 'react-native';
 
 const ProductList = ({ goToCart }) => {
@@ -41,17 +42,57 @@ const ProductList = ({ goToCart }) => {
   const addToCart = (product) => {
     const updatedProducts = products.map((prod) =>
       prod.id === product.id ? { ...prod, quantity: prod.quantity + 1 } : prod
+=======
+import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../firebase/firebase';
+
+const ProductList = ({ goToCart }) => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      
+      try {
+        const q = query(collection(db, "products"), where("category", "==", "women"));
+        const querySnapshot = await getDocs(q);
+        const productsData = [];
+        querySnapshot.forEach((doc) => {
+          productsData.push({ id: doc.id, ...doc.data(), quantity: 0 });
+        });
+        
+        setProducts(productsData);
+      } catch (error) {
+        console.error('Error fetching products: ', error);
+      }
+    };
+    
+
+    fetchProducts();
+  }, []);
+
+  const addToCart = (productId) => {
+    const updatedProducts = products.map((product) =>
+      product.id === productId ? { ...product, quantity: product.quantity + 1 } : product
+>>>>>>> origin/firebase
     );
     setProducts(updatedProducts);
   };
 
+<<<<<<< HEAD
   const removeFromCart = (product) => {
     const updatedProducts = products.map((prod) =>
       prod.id === product.id ? { ...prod, quantity: Math.max(0, prod.quantity - 1) } : prod
+=======
+  const removeFromCart = (productId) => {
+    const updatedProducts = products.map((product) =>
+      product.id === productId ? { ...product, quantity: Math.max(0, product.quantity - 1) } : product
+>>>>>>> origin/firebase
     );
     setProducts(updatedProducts);
   };
 
+<<<<<<< HEAD
   const handleAddToCart = (product) => {
     const existingItem = products.find((prod) => prod.id === product.id);
     if (existingItem) {
@@ -76,23 +117,52 @@ const ProductList = ({ goToCart }) => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.addToCartButton} onPress={() => handleAddToCart(item)}>
+=======
+  const renderProductItem = ({ item }) => (
+    <View style={styles.productItem}>
+      <Image source={{ uri: item.image }} style={styles.productImage} />
+      <View style={styles.productInfo}>
+        <Text style={styles.productName}>{item.name}</Text>
+        <Text>{item.price}</Text>
+      </View>
+      <View style={styles.quantityContainer}>
+        <TouchableOpacity style={styles.quantityButton} onPress={() => removeFromCart(item.id)}>
+          <Text>-</Text>
+        </TouchableOpacity>
+        <Text>{item.quantity}</Text>
+        <TouchableOpacity style={styles.quantityButton} onPress={() => addToCart(item.id)}>
+          <Text>+</Text>
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.addToCartButton} onPress={() => addToCart(item.id)}>
+>>>>>>> origin/firebase
         <Text>Add to Cart</Text>
       </TouchableOpacity>
     </View>
   );
 
+<<<<<<< HEAD
   // Generate a unique key based on the number of columns
   const flatListKey = columns.toString(); // Convert columns to string for key
 
+=======
+>>>>>>> origin/firebase
   return (
     <View style={styles.container}>
       <Text style={styles.title}>For Women</Text>
       <FlatList
+<<<<<<< HEAD
         key={flatListKey} // Use a unique key to force a fresh render
         data={products}
         renderItem={renderProductItem}
         keyExtractor={(item) => item.id.toString()}
         numColumns={columns}
+=======
+        data={products}
+        renderItem={renderProductItem}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+>>>>>>> origin/firebase
         contentContainerStyle={styles.flatListContainer}
       />
       <TouchableOpacity style={styles.button} onPress={goToCart}>
@@ -120,6 +190,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
     padding: 10,
+<<<<<<< HEAD
     // backgroundColor: 'black',
     borderRadius: 10,
     elevation: 3,
@@ -128,6 +199,15 @@ const styles = StyleSheet.create({
     width: 210,
     height: 240,
     // resizeMode: 'cover',
+=======
+    borderRadius: 10,
+    elevation: 3,
+    // backgroundColor: '#fff',
+  },
+  productImage: {
+    width: 210,
+    height: 260,
+>>>>>>> origin/firebase
     borderRadius: 10,
   },
   productInfo: {
@@ -135,7 +215,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   productName: {
+<<<<<<< HEAD
     fontSize: 23,
+=======
+    fontSize: 16,
+>>>>>>> origin/firebase
     fontWeight: 'bold',
   },
   quantityContainer: {
@@ -162,6 +246,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   flatListContainer: {
+<<<<<<< HEAD
     width: '100%',
     paddingVertical: 10,
   },
@@ -169,3 +254,10 @@ const styles = StyleSheet.create({
 
 export default ProductList;
 
+=======
+    paddingBottom: 20,
+  },
+});
+
+export default ProductList;
+>>>>>>> origin/firebase

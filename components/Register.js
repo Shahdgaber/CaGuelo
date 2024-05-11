@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text, Pressable, StyleSheet } from "react-native";
 import { router } from "expo-router";
-// import { register } from "../firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/firebase";
+
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -9,14 +11,18 @@ const Register = () => {
     const [error, setError] = useState('');
 
     const handlePress = async () => {
-        try {
-            const credentials = await register(email, password);
-            console.log(`credentials ${credentials}`);
-            router.navigate('/account/login');
-        } catch (error) {
-            console.log(`Error ${JSON.stringify(error)}`);
-            setError(error);
-        }
+      
+createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
     };
 
     return (

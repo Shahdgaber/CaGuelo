@@ -4,6 +4,7 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-nativ
 import { StyleSheet } from "react-native";
 import React from "react";
 
+
 const HomePage = () => {
   const handleSearch = () => {
     // Add functionality to handle search button press
@@ -14,13 +15,20 @@ const HomePage = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <View style={styles.logoContainer}>
+<<<<<<< HEAD
           <Text style={styles.logo}>CajwlOOh</Text>
+=======
+          <Text style={styles.logo}>CaGuelo</Text>
+>>>>>>> origin/firebase
         </View>
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
             placeholder="Search..."
+<<<<<<< HEAD
             // Add any additional props or event handlers for search functionality
+=======
+>>>>>>> origin/firebase
           />
           <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
             <Text style={styles.searchButtonText}>Search</Text>

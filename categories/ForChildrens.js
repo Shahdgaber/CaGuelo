@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import React from 'react'
 // import { View , Text } from 'react-native-web';
 // import ChildProductList from "../ProductList/ChildProductList"
@@ -15,6 +16,8 @@
 
 // };
 
+=======
+>>>>>>> origin/firebase
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import ChildProductList from "../ProductList/ChildProductList"
