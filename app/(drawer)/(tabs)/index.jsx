@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {Text,View,StyleSheet,SafeAreaView,FlatList,Pressable,TextInput,Animated,Dimensions , ScrollView , SectionList } from 'react-native';
-import { addDoc, getDocs,where , query,collection, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
+import {Text, View, StyleSheet, SafeAreaView, FlatList, Pressable, TextInput, ScrollView } from 'react-native';
+import { addDoc, getDocs, where, query, collection, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebase/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import Item from '../../Item';
-import { useRouter , Link } from 'expo-router';
+import { useRouter, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-
-const { width } = Dimensions.get('window');
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +13,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [userId, setUserId] = useState(null);
-  const [favorites, setFavorites] = useState({}); 
+  const [favorites, setFavorites] = useState({});
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -42,13 +40,6 @@ export default function Home() {
 
     return () => unsubscribe();
   }, []);
-
-  // useEffect(() => {
-  //   const filteredResults = data.filter((item) =>
-  //     item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  //   setFilteredData(filteredResults);
-  // }, [searchTerm, data]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
@@ -79,33 +70,28 @@ export default function Home() {
     }
   }, [userId]);
 
-  // const toggleFavorite = async (productId) => {
-  //   if (!userId) {
-  //     alert('Please sign in to manage your favorites');
-  //     return;
-  //   }
+  const handleSignOut = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        console.log('User signed out');
+        router.push('/Login');
+      })
+      .catch((error) => {
+        console.error('Error signing out:', error);
+      });
+  };
 
-  //   if (favorites[productId]) {
-  //     const favoriteSnapshot = await getDocs(collection(db, 'Favorites'));
-  //     const favoriteDoc = favoriteSnapshot.docs.find(
-  //       (doc) => doc.data().productId === productId && doc.data().userId === userId
-  //     );
-  //     if (favoriteDoc) {
-  //       await deleteDoc(favoriteDoc.ref);
-  //       setFavorites((prev) => ({ ...prev, [productId]: false }));
-  //     }
-  //   } else {
-  //     await addDoc(collection(db, 'Favorites'), {
-  //       userId,
-  //       productId,
-  //     });
-  //     setFavorites((prev) => ({ ...prev, [productId]: true }));
-  //   }
-  // };
 
+  const handleSearch = (text) => {
+    setSearchTerm(text);
+    const filteredResults = data.filter((item) =>
+      item.name.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredData(filteredResults);
+  };
 
   const renderProduct = ({ item }) => (
-    
     <View style={styles.itemContainer}>
       <Item
         name={item.name}
@@ -113,42 +99,36 @@ export default function Home() {
         image={item.image}
         productId={item.id}
       />
-      </View>
+    </View>
   );
   
   return (
     <ScrollView style={styles.scrollContainer}>
       <SafeAreaView style={styles.safeContainer}>
-        {/* <View style={styles.header}> */}
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search products..."
-            value={searchTerm}
-            onChangeText={(text) => setSearchTerm(text)}
-          />
-        {/* </View> */}
-          <FlatList
-            data={data}
-            renderItem={renderProduct}
-            keyExtractor={(item) => item.id}
-            // horizontal={true}
-            numColumns={2}
-            ListEmptyComponent={
-              <Text style={styles.emptyText}>No Products found</Text>
-            }
-          />
+        <Pressable onPress={handleSignOut}>
+          <Ionicons name="log-out-outline" size={30} color="black" />
+        </Pressable>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search products..."
+          value={searchTerm}
+          onChangeText={handleSearch}
+        />
+        <FlatList
+          data={filteredData}
+          renderItem={renderProduct}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No Products found</Text>
+          }
+        />
       </SafeAreaView>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
   searchInput: {
     flex: 1,
     fontSize: 16,
@@ -159,30 +139,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: 'white',
   },
-  itemActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'left',
-  },
   scrollContainer: {
     flex: 1,
     backgroundColor: 'white',
   },
   safeContainer: {
     padding: 20,
-  },
-  itemActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start', // Align items on the left
-  },
-  emptyText: {
-    textAlign: 'center',
-    fontSize: 18,
-    color: '#666',
-    alignSelf: 'center',
-  },
-  cardButton: {
-    marginLeft: 10,
   },
   itemContainer: {
     width: '50%' ,

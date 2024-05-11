@@ -49,7 +49,7 @@ export default function favorite() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Favorites</Text>
+      <Text style={styles.text}>Cart</Text>
       <FlatList
         data={favoriteItems}
         renderItem={({ item }) => (
@@ -60,7 +60,7 @@ export default function favorite() {
           />
         )}
         keyExtractor={(item) => item.productId}
-        ListEmptyComponent={<Text>Your favorites list is empty</Text>}
+        ListEmptyComponent={<Text>Your Cart list is empty</Text>}
       />
     </View>
   );

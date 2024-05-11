@@ -102,7 +102,7 @@ const CustomDrawerContent = (props) => {
       <DrawerItem
         icon={({ color, size }) => (
           <Ionicons
-            name="shirt-outline"
+            name="settings-outline"
             size={size}
             color={pathname == "/ChildProductList" ? "#fff" : "#000"}
           />

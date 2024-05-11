@@ -28,8 +28,8 @@ export default function TabLayout() {
         <Tabs.Screen
         name="favorite"
         options={{
-          title: 'Favorite',
-          tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
+          title: 'Cart',
+          tabBarIcon: ({ color }) => <TabBarIcon name="shopping-cart" color={color} />,
         }}
       />
         <Tabs.Screen

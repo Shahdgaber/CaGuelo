@@ -97,7 +97,9 @@ export default function Item({ name, price, image , quantity ,  productId }) {
   
   return (
     <View style={styles.productItem}>
-    <Image source={{ uri : image }} style={styles.productImage} />
+     <Pressable onPress={() => router.push(`/products?name=${name}&price=${price}&image=${image}`)}>
+        <Image source={{ uri: image }} style={styles.image} />
+      </Pressable>
     <View style={styles.productInfo}>
       <Text style={styles.productName}>{name}</Text>
       <Text>{price}</Text>
@@ -113,7 +115,7 @@ export default function Item({ name, price, image , quantity ,  productId }) {
       <View style={styles.itemActions}>
         <Pressable onPress={() => toggleFavorite(productId)}>
           <Ionicons
-            name="heart-circle-outline"
+            name="card-outline"
             size={30}
             color={favorites[productId] ? "#0a4a7c" : 'lightgray'}
           />
@@ -156,10 +158,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     // elevation: 3,
   },
-  productImage: {
-    width: '80%',
-    height: 160,
-    borderRadius: 10,
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 20,
+    marginRight: 10,
   },
   productInfo: {
     marginTop: 10,
