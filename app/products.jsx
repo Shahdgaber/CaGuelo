@@ -1,119 +1,50 @@
-import { Link } from "expo-router"; 
-import { View, Text, StyleSheet , ScrollView , ImageBackground , Dimensions} from "react-native"; 
-import React from "react"; 
- 
-const windowWidth = Dimensions.get('window').width; 
-const windowHeight = Dimensions.get('window').height; 
- 
-const ProductPage = () => { 
+import React from 'react';
+import { View, Text, Image, StyleSheet, Pressable,SafeAreaView } from 'react-native';
+import { useLocalSearchParams } from "expo-router";
+import { router } from 'expo-router';
 
-  useEffect(() => {
-    const latest = products.filter((item) => item.category === 'latest');
-    const popular = products.filter((item) => item.category === 'popular');
-    const laptops = products.filter((item) => item.category === 'laptop');
-    const phones = products.filter((item) => item.category === 'phone');
-    const accessories = products.filter((item) => item.category === 'accessories');
+export default function Product() {
+  const { name, price, image } = useLocalSearchParams();
 
-    setFilteredPopular(
-      popular.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
+  return (
+    <View style={styles.container}>
+    <SafeAreaView>
+    <Image source={{ uri: image }} style={styles.image} />
+      <View style={{flex:1,paddingHorizontal:25}}><Text style={styles.name}>Name: {name}</Text>
+      <Text style={styles.price}>Price: ${price}</Text>
+      <Pressable onPress={() => router.replace('/')}> 
+        <Text style={styles.link}>to home</Text>
+      </Pressable></View>
+    </SafeAreaView>
+      
+    </View>
+  );
+}
 
-    setFilteredLatest(
-      latest.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-
-    setFilteredLaptops(
-      laptops.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-
-    setFilteredPhones(
-      phones.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-    setFilteredAccessories(
-      accessories.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [products, searchTerm]);
-  
-  return ( 
-    <ScrollView contentContainerStyle={styles.container}> 
-      {/* <ImageBackground 
-        source={require('../assets/back.jpg')} 
-        style={styles.backgroundImage} 
-      >  */}
-        <View style={styles.header}> 
-          {/* <View style={styles.logoContainer}> 
-            <Text style={styles.logo}>Choose the category</Text> 
-          </View> */} 
-          <View style={styles.navLinks}> 
-            <Link href="/MensProductList" style={styles.link}> 
-               Men  
-            </Link> 
-            <Link href="/WomenProductList" style={styles.link}> 
-               Women  
-            </Link> 
-            <Link href="/ChildProductList" style={styles.link}> 
-               Children  
-            </Link> 
-          </View> 
-        </View> 
-      {/* </ImageBackground>  */}
-    </ScrollView> 
-  ); 
-}; 
- 
-const styles = StyleSheet.create({ 
-  container: { 
-    flexGrow: 1, 
-    backgroundColor : "#d9ead3" , 
-  }, 
-  backgroundImage: { 
-    width: windowWidth, 
-    height: windowHeight, 
-    
-  }, 
-  header: { 
-    flexDirection: "row", 
-    justifyContent: "space-between", 
-    alignItems: "center", 
-    paddingVertical: windowHeight * 0.02, 
-    paddingHorizontal: windowWidth * 0.05, 
-    borderBottomWidth: 0.03 * windowWidth, 
-    borderBottomColor: "#ccc", 
-  }, 
-  logoContainer: { 
-    flex: 1, 
-  }, 
-  logo: { 
-    fontSize: windowWidth * 0.05, 
-    fontWeight: "bold", 
-    color: 'black', 
-    textAlign: "center", 
-  }, 
-  navLinks: { 
-    flexDirection: "row", 
-    flex: 1, 
-    justifyContent: "space-around", 
-    alignItems: "center", 
-    color: "blue", 
-  }, 
-  link: { 
-    fontSize: windowWidth * 0.04, 
-    color: "#555", 
-    paddingVertical: windowHeight * 0.015, 
-    paddingHorizontal: windowWidth * 0.03, 
-    textAlign: "center", 
-    fontWeight: "bold", 
-  }, 
-}); 
- 
-export default ProductPage;
+const styles = StyleSheet.create({
+  container: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    flex:1,
+    width: '100%', 
+    aspectRatio: 1, 
+    marginBottom: 20,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: 'bold', 
+    marginBottom: 10,
+  },
+  price: {
+    fontSize: 16,
+    color: '#888',
+  },
+  link: {
+    color: 'blue', 
+    textDecorationLine: 'underline',
+    marginTop: 10, 
+  },
+});
