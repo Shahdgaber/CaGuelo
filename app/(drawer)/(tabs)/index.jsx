@@ -105,6 +105,7 @@ export default function Home() {
   return (
     <ScrollView style={styles.scrollContainer}>
       <SafeAreaView style={styles.safeContainer}>
+              <Text style={styles.title}>CaGuelo</Text>
         <Pressable onPress={handleSignOut}>
           <Ionicons name="log-out-outline" size={30} color="black" />
         </Pressable>
@@ -155,5 +156,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     color: '#666',
+  },
+  title: {
+    fontSize: 35,
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
 });
